@@ -1,3 +1,4 @@
+```cpp
 #include <AFMotor.h>
 AF_DCMotor M1(3);
 AF_DCMotor M2(4);
@@ -127,3 +128,5 @@ void kanan(){
       before = 0;
 }
 
+
+```
