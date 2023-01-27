@@ -1,0 +1,129 @@
+#include <AFMotor.h>
+AF_DCMotor M1(3);
+AF_DCMotor M2(4);
+AF_DCMotor M3(1);
+AF_DCMotor M4(2);
+
+const int kiriSensor = A0;
+const int tengahSensor = A3;
+const int kananSensor =A5;
+int a = 250;
+int b = 220;
+int c = 180; 
+boolean kiriData, kananData, tengahData, before;
+int i;
+String binData;
+
+
+void setup() {
+    Serial.begin(9600);
+    pinMode(kiriSensor, INPUT);
+    pinMode(kananSensor, INPUT);
+    pinMode(tengahSensor, INPUT);
+    
+     // turn on motor
+    M1.setSpeed(a);
+    M2.setSpeed(a);
+    M3.setSpeed(a);
+    M4.setSpeed(a);
+    
+    M1.run(RELEASE);
+    M2.run(RELEASE);
+    M3.run(RELEASE);
+    M4.run(RELEASE);
+}
+
+void loop() {
+  kiriData = digitalRead(kiriSensor);
+  tengahData = digitalRead(tengahSensor);
+  kananData = digitalRead(kananSensor);
+  binData = String(kiriData)+String(tengahData)+String(kananData);
+  //Serial.println(binData);
+
+  if (binData == "000"){ //MEMORI
+       Serial.println("000");
+       if(before == 0){
+          kanan();
+       }
+       if(before == 1){
+          kiri();
+       }
+  }
+  
+  if (binData == "001"){ //KANAN
+      Serial.println("001");
+      kanan();
+  }
+  
+  if (binData == "010"){ //MAJU
+       Serial.println("010");
+       i++;
+       if(i<a){
+          M1.setSpeed(i);
+          M2.setSpeed(i);
+          M3.setSpeed(i);
+          M4.setSpeed(i);
+       }
+       
+       M1.run(FORWARD);
+       M2.run(FORWARD);
+       M3.run(FORWARD);
+       M4.run(FORWARD);
+  }
+
+  if (binData == "011"){ //KANAN
+      Serial.println("011");
+      kanan();
+  }
+
+  if (binData == "100"){ //KIRI
+      Serial.println("100");
+      kiri();
+  }
+
+  if (binData == "110"){ //KIRI
+      Serial.println("110");
+      kiri();
+  }
+  
+  if (binData == "111"){ //MEMORI
+       Serial.println("111");
+       if(before == 0){
+          kanan();
+       }
+       if(before == 1){
+          kiri();
+       }
+  }
+}
+
+void kiri(){
+      M1.setSpeed(b);
+      M2.setSpeed(c);
+      M3.setSpeed(c);
+      M4.setSpeed(b);
+      
+      M1.run(FORWARD);
+      M2.run(BACKWARD);
+      M3.run(BACKWARD);
+      M4.run(FORWARD);
+
+      i = b;
+      before = 1;
+}
+
+void kanan(){
+      M1.setSpeed(c);
+      M2.setSpeed(b);
+      M3.setSpeed(b);
+      M4.setSpeed(c);
+      
+      M1.run(BACKWARD);
+      M2.run(FORWARD);
+      M3.run(FORWARD);
+      M4.run(BACKWARD);
+
+      i = b;
+      before = 0;
+}
+
